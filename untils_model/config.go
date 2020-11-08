@@ -1,5 +1,7 @@
 package untils_model
 
+import "github.com/gin-gonic/gin"
+
 //配置文件实体类
 type Input struct {
 	//view:用于注释
@@ -26,3 +28,26 @@ type SelfConfig struct {
 	Flag int    `json:"flag"`
 	Tag  int    `json:"tag"`
 }
+
+// api错误的结构体
+type APIException struct {
+	Code      int    `json:"-"`
+	ErrorCode int    `json:"error_code"`
+	Msg       string `json:"msg"`
+	Request   string `json:"request"`
+}
+
+// 实现接口
+func (e *APIException) Error() string {
+	return e.Msg
+}
+
+func NewAPIException(code int, errorCode int, msg string) *APIException {
+	return &APIException{
+		Code:      code,
+		ErrorCode: errorCode,
+		Msg:       msg,
+	}
+}
+
+type HandlerFunc func(c *gin.Context) error
